@@ -205,28 +205,33 @@ public class SignaturePad extends View {
     }
 
     public void setSignatureBitmap(Bitmap signature) {
-        clear();
-        ensureSignatureBitmap();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                clear();
+                ensureSignatureBitmap();
 
-        RectF tempSrc = new RectF();
-        RectF tempDst = new RectF();
+                RectF tempSrc = new RectF();
+                RectF tempDst = new RectF();
 
-        int dWidth = signature.getWidth();
-        int dHeight = signature.getHeight();
-        int vWidth = getWidth();
-        int vHeight = getHeight();
+                int dWidth = signature.getWidth();
+                int dHeight = signature.getHeight();
+                int vWidth = getWidth();
+                int vHeight = getHeight();
 
-        // Generate the required transform.
-        tempSrc.set(0, 0, dWidth, dHeight);
-        tempDst.set(0, 0, vWidth, vHeight);
+                // Generate the required transform.
+                tempSrc.set(0, 0, dWidth, dHeight);
+                tempDst.set(0, 0, vWidth, vHeight);
 
-        Matrix drawMatrix = new Matrix();
-        drawMatrix.setRectToRect(tempSrc, tempDst, Matrix.ScaleToFit.CENTER);
+                Matrix drawMatrix = new Matrix();
+                drawMatrix.setRectToRect(tempSrc, tempDst, Matrix.ScaleToFit.CENTER);
 
-        Canvas canvas = new Canvas(mSignatureBitmap);
-        canvas.drawBitmap(signature, drawMatrix, null);
-        setIsEmpty(false);
-        invalidate();
+                Canvas canvas = new Canvas(mSignatureBitmap);
+                canvas.drawBitmap(signature, drawMatrix, null);
+                setIsEmpty(false);
+                invalidate();
+            }
+        });
     }
 
     public Bitmap getTransparentSignatureBitmap() {
